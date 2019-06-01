@@ -17,43 +17,27 @@ function setup() {
 
 function draw() {
   
-  
-    if (keyIsDown(SHIFT)){
-      bullet.push(new Bullet(RectX,RectY))
-      console.log(bullet)
-    }
-  
-  
   function Bullet(PX,PY){
     this.speed = 1.5;
     //PX = player position x
-    this.x = PX;
+    this.x = PX+30;
     //PY = player position y
-    this.y = PY;
+    this.y = PY+15;
     this.r = 5;
     
-    this.show = function(){ 
+    this.show = function(){
       circle(this.x,this.y,this.r);
     }
     
     this.shoot = function() {
-      this.x += this.x+this.speed
+      this.x += this.speed
     }
-    
     this.onScreen = function() {
       return this.x > -this.r && this.x < width+this.r &&
               this.y > -this.r && this.y < height+this.r;
-    }
   }
+ }
 
-      let keepbullets = [];
-  let anyhit = false;
-  for (let i = 0; i < bullet.length;i++){
-    //FFS...............
-    bullet[i].shoot();
-    bullet[i].show();
-    
-  }
     function rectMove() {
         if (keyIsDown(87)) {
             RectY -= 5;
@@ -126,5 +110,23 @@ function draw() {
     rect(RectX, RectY, 30, 30 );
     stroke(0);
     circle(CirkX, CirkY, CirkR);
+  
+  // Rectangle shoots
+  //Sätt in detta i en function för more moistness? hitt>> 
+    if (keyIsPressed === true && key == 'v'){
+      keyIsPressed = false;
+      bullet.push(new Bullet(RectX,RectY));
+    }
+    let keepbullets = []
+    for(let i = 0;i < bullet.length;i++){
+      bullet[i].shoot();
+      if(bullet[i].onScreen()) {
+        keepbullets.push(bullet[i]);
+        bullet[i].show();
+      }
+    }
+  //Removes bullets thats not on screen
+    bullet = keepbullets;
+  //<<till hitt
     
 }
