@@ -223,6 +223,7 @@ function draw() {
     ShootC();
 
     //Why in all of the fu*ks is the if statement screwing up the borders????hello.....
+    //borders be working fine when end."insert shat" in uncommented..ffs
     //if (CirkHP <= 30 || RectHP <= 30) {
         //end.push(new endgame(RectX, RectY, RectR));
         //end[0].show();
