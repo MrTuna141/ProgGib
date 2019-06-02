@@ -1,16 +1,18 @@
 let RectX = 30;
 let RectY = 30;
 let RectR = 30;
+let RectHP = 50;
 
 let CirkX = 300;
 let CirkY = 300;
 let CirkR = 18;
-let CirkHP = 10;
+let CirkHP = 50;
 
 let CanvX = 400;
 let CanvY = 400;
 
-let bullet = [];
+let bulletR = [];
+let bulletC = [];
 
 
 
@@ -33,8 +35,11 @@ function draw() {
             circle(this.x, this.y, this.r);
         }
 
-        this.shoot = function() {
+        this.shootR = function() {
             this.x += this.speed
+        }
+        this.shootC = function() {
+            this.x -= this.speed
         }
         this.onScreen = function() {
             return this.x > -this.r && this.x < width + this.r &&
@@ -102,22 +107,22 @@ function draw() {
             CirkY -= 5;
         }
     }
-    //Fix indent
+
     function ShootR() {
         let keepbullets = []
         let anyhitC = false;
-        for (let i = 0; i < bullet.length; i++) {
-            bullet[i].shoot();
-            let hitC = dist(bullet[i].x, bullet[i].y, CirkX, CirkY) <= CirkR;
+        for (let i = 0; i < bulletR.length; i++) {
+            bulletR[i].shootR();
+            let hitC = dist(bulletR[i].x, bulletR[i].y, CirkX, CirkY) <= CirkR;
             anyhitC = anyhitC || hitC;
-            if (!hitC && bullet[i].onScreen()) {
-                keepbullets.push(bullet[i]);
-                bullet[i].show();
+            if (!hitC && bulletR[i].onScreen()) {
+                keepbullets.push(bulletR[i]);
+                bulletR[i].show();
             }
         }
         //Removes bullets thats not on screen
 
-        bullet = keepbullets;
+        bulletR = keepbullets;
         if (anyhitC) {
             CirkHP--;
         }
@@ -127,10 +132,40 @@ function draw() {
             text('MrH WINS!!!', width / 2, height / 2, 1000, 1000)
 
         }
-        textSize(14);
-        text('MrS HP: ' + CirkHP, width - 100, 20, 500, 500)
+        textSize(12);
+        text('MrS HP: ' + CirkHP, width / 1.5, 20, 500, 500)
         //<<till hitt
     }
+
+    function ShootC() {
+        let keepbullets = []
+        let anyhitR = false;
+        for (let i = 0; i < bulletC.length; i++) {
+            bulletC[i].shootC();
+            let hitR = dist(bulletC[i].x, bulletC[i].y, RectX, RectY) <= RectR;
+            anyhitR = anyhitR || hitR;
+            if (!hitR && bulletC[i].onScreen()) {
+                keepbullets.push(bulletC[i]);
+                bulletC[i].show();
+            }
+        }
+        //Removes bullets thats not on screen
+
+        bulletC = keepbullets;
+        if (anyhitR) {
+            RectHP--;
+        }
+        //Fix end stuff
+        if (RectHP === 0) {
+
+            text('MrH WINS!!!', width / 2, height / 2, 1000, 1000)
+
+        }
+        textSize(12);
+        text('MrH HP: ' + RectHP, width / 6, 20, 500, 500)
+
+    }
+
 
 
     rectMove();
@@ -145,14 +180,20 @@ function draw() {
     stroke(0);
     circle(CirkX, CirkY, CirkR);
 
-    // Rectangle shoots
-    //Sätt in detta i en function för more moistness? hitt>> 
+    // MrH shoots 
     //sktjuta auto?
     if (keyIsPressed === true && key == 'v') {
         keyIsPressed = false;
-        bullet.push(new Bullet(RectX, RectY));
+        bulletR.push(new Bullet(RectX, RectY));
     }
     ShootR();
+
+    // MrS shoots
+    if (keyIsPressed === true && key == 'm') {
+        keyIsPressed = false;
+        bulletC.push(new Bullet(CirkX - 50, CirkY - 14));
+    }
+    ShootC();
 
 
 }
