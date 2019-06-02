@@ -1,19 +1,20 @@
 let RectX = 30;
 let RectY = 30;
 let RectR = 30;
-let RectHP = 50;
+let RectHP = 100;
 
-let CirkX = 300;
-let CirkY = 300;
+let CirkX = 400;
+let CirkY = 400;
 let CirkR = 18;
-let CirkHP = 50;
+let CirkHP = 100;
 
-let CanvX = 400;
-let CanvY = 400;
+let CanvX = 600;
+let CanvY = 600;
 
 let bulletR = [];
 let bulletC = [];
 
+let end = [];
 
 
 function setup() {
@@ -24,7 +25,7 @@ function setup() {
 function draw() {
 
     function Bullet(PX, PY) {
-        this.speed = 1.5;
+        this.speed = 10;
         //PX = player position x
         this.x = PX + 30;
         //PY = player position y
@@ -79,28 +80,27 @@ function draw() {
 
     function borders() {
         //Stops the rectangle from passing the line
-        if (CirkX === 215) {
+        if (CirkX === width / 2 + 15) {
             CirkX += 5;
         }
         //Stops the rectangle from passing the line
-        if (RectX == 175) {
+        if (RectX == width / 2 - 10) {
             RectX -= 5;
         }
-
         //Stopa skiten från att springa från skärmen
-        if (RectX === width - width - 5) {
+        if (RectX === width - width + 10) {
             RectX += 5;
         }
         if (CirkX === width - 10) {
             CirkX -= 5;
         }
-        if (RectY === height - height - 5) {
+        if (RectY === height - height + 10) {
             RectY += 5;
         }
-        if (RectY === height - 25) {
+        if (RectY === height - 10) {
             RectY -= 5;
         }
-        if (CirkY === height - height + 10) {
+        if (CirkY === height - height + 20) {
             CirkY += 5;
         }
         if (CirkY === height - 15) {
@@ -128,13 +128,15 @@ function draw() {
         }
         //Fix end stuff
         if (CirkHP === 0) {
-            stop();
-            text('MrH WINS!!!', width / 2, height / 2, 1000, 1000)
+            noLoop();
+            textSize(32);
+            text('MrH WINS!!!', width / 2, height / 2, 100, 100)
 
         }
         textSize(12);
-        text('MrS HP: ' + CirkHP, width / 1.5, 20, 500, 500)
-        //<<till hitt
+        fill(0);
+        text('MrS HP: ' + CirkHP, width / 1.5, 20)
+
     }
 
     function ShootC() {
@@ -157,43 +159,76 @@ function draw() {
         }
         //Fix end stuff
         if (RectHP === 0) {
+            noLoop();
+            textSize(32);
 
-            text('MrH WINS!!!', width / 2, height / 2, 1000, 1000)
+            text('MrS WINS!!!', width / 3, height / 2);
 
         }
         textSize(12);
-        text('MrH HP: ' + RectHP, width / 6, 20, 500, 500)
-
+        fill(0);
+        text('MrH HP: ' + RectHP, width / 6, 20)
     }
 
+    //trying to add deathcircle?
+    function endgame(x, y, r) {
+        this.x = width / 2;
+        this.y = height / 2;
+        this.r = width;
 
+        this.show = function() {
+            noFill();
+            stroke(255, 0, 255);
+            rectMode(CENTER);
+            rect(this.x, this.y, this.r, this.r);
+            fill(255)
+        }
+        this.end = function() {
+            this.r -= 01;
+            //console.log(distance);
+            console.log(r + this.r)
+        }
 
+        function check() {
+            if (CirkHP <= 30 || RectHP <= 30) {
+                end.push(new endgame(RectX, RectY, RectR));
+                end[0].show();
+                end[0].end();
+            }
+        }
+    }
     rectMove();
     cirkMove();
     borders();
     clear();
     background(220);
     stroke(255, 0, 255);
-    line(200, 0, 200, 400);
+    line(height / 2, 0, width / 2, width);
     stroke(0);
     rect(RectX, RectY, 30, 30);
     stroke(0);
     circle(CirkX, CirkY, CirkR);
 
-    // MrH shoots 
-    //sktjuta auto?
+    //MrH shoots
     if (keyIsPressed === true && key == 'v') {
         keyIsPressed = false;
         bulletR.push(new Bullet(RectX, RectY));
     }
     ShootR();
-
-    // MrS shoots
+    //MrS shoots
     if (keyIsPressed === true && key == 'm') {
         keyIsPressed = false;
         bulletC.push(new Bullet(CirkX - 50, CirkY - 14));
     }
     ShootC();
 
+    //Why in all of the fu*ks is the if statement screwing up the borders????hello.....
+    //if (CirkHP <= 30 || RectHP <= 30) {
+        //end.push(new endgame(RectX, RectY, RectR));
+        //end[0].show();
+        //end[0].end();
+    //}
+
+    fill(255);
 
 }
